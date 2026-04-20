@@ -442,22 +442,31 @@ All colors MUST be HSL.
 }
 
 @media (max-width: 768px) {
-  .hero-sphere-wrap-right {
-    right: -58%;
-    inset-y: 8%;
-    width: min(820px, 150vw);
-    opacity: 0.52;
-  }
-
-  .hero-sphere-wrap-left {
-    left: -68%;
-    inset-y: 2%;
-    width: min(680px, 132vw);
-    opacity: 0.24;
+  .hero-sphere-wrap {
+    display: none;
   }
 
   .hero-sphere-node,
   .hero-sphere-connection {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-sphere-scene,
+  .hero-sphere-glow-primary,
+  .hero-sphere-glow-accent,
+  .hero-sphere-web-fine,
+  .hero-sphere-web-bold,
+  .hero-sphere-grid-latitude,
+  .hero-sphere-grid-longitude,
+  .hero-sphere-grid-diagonal,
+  .hero-sphere-highlight,
+  .hero-sphere-ring-outer,
+  .hero-sphere-ring-mid,
+  .hero-sphere-ring-inner,
+  .hero-sphere-scanline,
+  .hero-sphere-node {
+    animation: none;
   }
 }

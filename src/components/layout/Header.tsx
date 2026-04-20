@@ -19,7 +19,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <header className="fixed top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-sm md:bg-background/80 md:backdrop-blur-lg">
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -67,7 +67,8 @@ const Header = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+            className="rounded-lg p-2 transition-colors hover:bg-muted md:hidden"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -75,7 +76,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-20 left-0 w-full bg-background/95 backdrop-blur-lg border-b border-border animate-slide-in-right">
+          <div className="absolute left-0 top-20 w-full border-b border-border bg-background md:hidden">
             <div className="px-4 py-4 space-y-2">
               {navLinks.map((link) => (
                 <Link

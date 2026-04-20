@@ -81,6 +81,7 @@ const services = [
     title: "Healthcare Recruitment",
     description: "Specialized hiring support for GP placement, verification, and relocation",
     icon: Stethoscope,
+    href: "https://med-journey-eight.vercel.app/",
   },
 ];
 
@@ -102,38 +103,67 @@ const ServicesGrid = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {services.map((service, index) => {
             const Icon = service.icon;
+            const cardContent = (
+              <Card 
+                className="relative h-full overflow-hidden border-border/50 bg-card/50 p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-glow animate-fade-in"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                {/* Background gradient effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                
+                {/* Icon */}
+                <div className="mb-3 inline-flex rounded-lg bg-gradient-to-br from-primary to-accent p-2.5 transition-transform duration-300 group-hover:scale-110">
+                  <Icon className="h-5 w-5 text-primary-foreground" />
+                </div>
+                
+                {/* Content */}
+                <h3 className="mb-2 text-base font-semibold transition-colors group-hover:text-primary">
+                  {service.title}
+                </h3>
+                <p className="mb-3 text-sm text-muted-foreground">
+                  {service.description}
+                </p>
+
+                {service.href ? (
+                  <p className="mb-3 text-sm text-muted-foreground">
+                    Visit{" "}
+                    <span className="bg-gradient-to-r from-primary to-accent bg-clip-text font-semibold text-transparent">
+                      Helios MedJourney
+                    </span>
+                  </p>
+                ) : null}
+                
+                {/* Arrow */}
+                <div className="flex items-center text-primary opacity-0 transition-all duration-300 group-hover:opacity-100">
+                  <span className="mr-1 text-xs font-medium">
+                    {service.href ? "Visit website" : "Learn more"}
+                  </span>
+                  <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                </div>
+              </Card>
+            );
+
+            if (service.href) {
+              return (
+                <a
+                  key={service.id}
+                  href={service.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group"
+                >
+                  {cardContent}
+                </a>
+              );
+            }
+
             return (
               <Link
                 key={service.id}
                 to={`/request-service?service=${encodeURIComponent(service.title)}`}
                 className="group"
               >
-                <Card 
-                  className="relative h-full p-5 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-glow hover:-translate-y-1 overflow-hidden animate-fade-in"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  {/* Background gradient effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  {/* Icon */}
-                  <div className="inline-flex p-2.5 rounded-lg bg-gradient-to-br from-primary to-accent mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <Icon className="w-5 h-5 text-primary-foreground" />
-                  </div>
-                  
-                  {/* Content */}
-                  <h3 className="text-base font-semibold mb-2 group-hover:text-primary transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {service.description}
-                  </p>
-                  
-                  {/* Arrow */}
-                  <div className="flex items-center text-primary opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <span className="text-xs font-medium mr-1">Learn more</span>
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Card>
+                {cardContent}
               </Link>
             );
           })}

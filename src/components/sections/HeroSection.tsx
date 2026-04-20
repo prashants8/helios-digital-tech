@@ -10,12 +10,17 @@ const HeroSection = () => {
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-card/30 to-background" />
       <div className="absolute inset-0 bg-gradient-to-t from-primary/5 via-transparent to-accent/5" />
-      <HeroSphere side="left" />
-      <HeroSphere side="right" />
+      <div className="hidden md:block">
+        <HeroSphere side="left" />
+        <HeroSphere side="right" />
+      </div>
       
       {/* Animated gradient orbs */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-primary/15 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/15 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
+      <div className="absolute left-6 top-16 h-48 w-48 rounded-full bg-primary/12 blur-3xl sm:left-10 sm:top-20 sm:h-72 sm:w-72 lg:h-96 lg:w-96 lg:animate-float" />
+      <div
+        className="absolute bottom-16 right-6 h-44 w-44 rounded-full bg-accent/12 blur-3xl sm:bottom-20 sm:right-10 sm:h-72 sm:w-72 lg:h-96 lg:w-96 lg:animate-float"
+        style={{ animationDelay: "2s" }}
+      />
       
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 opacity-40" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 60 0 L 0 0 0 60' fill='none' stroke='rgba(214,176,74,0.06)' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)'/%3E%3C/svg%3E")` }} />
@@ -45,7 +50,7 @@ const HeroSection = () => {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold animate-fade-in" style={{ animationDelay: "0.2s" }}>
+          <h1 className="text-4xl font-bold leading-tight animate-fade-in md:text-6xl lg:text-7xl" style={{ animationDelay: "0.2s" }}>
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
               Empowering Businesses
             </span>
@@ -60,7 +65,7 @@ const HeroSection = () => {
           </h1>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          <p className="mx-auto max-w-3xl text-base text-muted-foreground animate-fade-in sm:text-lg md:text-xl" style={{ animationDelay: "0.4s" }}>
             Transform your digital infrastructure with our comprehensive suite of IT services. 
             From cloud solutions to business intelligence, we deliver innovation that drives growth.
           </p>

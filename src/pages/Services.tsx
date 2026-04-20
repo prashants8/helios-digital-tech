@@ -37,6 +37,7 @@ const Services = () => {
       title: "Healthcare Recruitment",
       description: "Specialized recruitment for the healthcare sector with a focus on GP placement in Canada",
       services: ["GP Placement", "Credential Verification", "Relocation Services", "Global Talent Sourcing"],
+      href: "https://med-journey-eight.vercel.app/",
     },
   ];
 
@@ -93,6 +94,19 @@ const Services = () => {
                             </li>
                           ))}
                         </ul>
+                        {category.href ? (
+                          <p className="pt-2 text-sm text-muted-foreground">
+                            Explore our healthcare platform{" "}
+                            <a
+                              href={category.href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent transition-opacity hover:opacity-80"
+                            >
+                              Helios MedJourney
+                            </a>
+                          </p>
+                        ) : null}
                       </div>
                     </div>
                   </Card>
