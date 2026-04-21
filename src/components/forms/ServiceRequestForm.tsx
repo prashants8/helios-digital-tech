@@ -12,6 +12,8 @@ interface ServiceRequestFormProps {
   initialService?: string;
 }
 
+const SERVICE_REQUEST_EMAIL = "info@heliosdigitaltechnology.com";
+
 const ServiceRequestForm = ({ initialService = "" }: ServiceRequestFormProps) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,30 +73,56 @@ const ServiceRequestForm = ({ initialService = "" }: ServiceRequestFormProps) =>
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    if (!formData.service) {
       setIsSubmitting(false);
-      setIsSubmitted(true);
       toast({
-        title: "Request Submitted Successfully!",
-        description: "Our team will review your request and contact you within 24 hours.",
+        title: "Select a service",
+        description: "Please choose the service you need before submitting your request.",
+        variant: "destructive",
       });
-      
-      // Reset form after delay
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          company: "",
-          phone: "",
-          service: "",
-          budget: "",
-          timeline: "",
-          description: "",
-        });
-        setIsSubmitted(false);
-      }, 3000);
-    }, 2000);
+      return;
+    }
+
+    const subject = `Service Request: ${formData.service}`;
+    const body = [
+      "New service request from heliosdigitaltechnology.com",
+      "",
+      `Full Name: ${formData.name}`,
+      `Email Address: ${formData.email}`,
+      `Company Name: ${formData.company || "Not provided"}`,
+      `Phone Number: ${formData.phone || "Not provided"}`,
+      `Service Required: ${formData.service}`,
+      `Budget Range: ${formData.budget || "Not provided"}`,
+      `Project Timeline: ${formData.timeline || "Not provided"}`,
+      "",
+      "Project Description:",
+      formData.description,
+    ].join("\n");
+
+    const mailtoLink = `mailto:${SERVICE_REQUEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailtoLink;
+
+    setIsSubmitting(false);
+    setIsSubmitted(true);
+    toast({
+      title: "Email draft prepared",
+      description: `Your email app should open a draft addressed to ${SERVICE_REQUEST_EMAIL}. Send that email to complete the request.`,
+    });
+
+    setTimeout(() => {
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        phone: "",
+        service: initialService,
+        budget: "",
+        timeline: "",
+        description: "",
+      });
+      setIsSubmitted(false);
+    }, 3000);
   };
 
   const handleChange = (field: string, value: string) => {
@@ -111,7 +139,7 @@ const ServiceRequestForm = ({ initialService = "" }: ServiceRequestFormProps) =>
         </div>
         <h3 className="text-2xl font-bold mb-3">Thank You!</h3>
         <p className="text-muted-foreground">
-          Your service request has been received. Our team will contact you soon.
+          Your email draft is ready. Please send it from your email app so our team receives your request.
         </p>
       </Card>
     );

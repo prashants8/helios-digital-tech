@@ -49,7 +49,7 @@ const Privacy = () => {
                   <h2 className="text-xl font-semibold">Contact</h2>
                   <p className="text-muted-foreground">
                     For privacy-related questions, contact us at
-                    {" "}info@heliosdigital.tech.
+                    {" "}info@heliosdigitaltechnology.com.
                   </p>
                 </div>
               </Card>

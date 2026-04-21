@@ -23,8 +23,8 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email Us",
-      details: "info@heliosdigital.tech",
-      action: "mailto:info@heliosdigital.tech",
+      details: "info@heliosdigitaltechnology.com",
+      action: "mailto:info@heliosdigitaltechnology.com",
     },
     {
       icon: Clock,

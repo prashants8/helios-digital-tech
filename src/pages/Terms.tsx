@@ -47,7 +47,7 @@ const Terms = () => {
                   <h2 className="text-xl font-semibold">Contact</h2>
                   <p className="text-muted-foreground">
                     For questions about these terms, contact
-                    {" "}info@heliosdigital.tech.
+                    {" "}info@heliosdigitaltechnology.com.
                   </p>
                 </div>
               </Card>
