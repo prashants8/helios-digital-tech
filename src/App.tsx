@@ -14,6 +14,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import FloatingCTA from "./components/ui/FloatingCTA";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <SpeedInsights />
       <BrowserRouter>
         <ScrollToTop />
         <FloatingCTA />
