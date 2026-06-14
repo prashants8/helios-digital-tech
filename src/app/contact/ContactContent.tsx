@@ -41,8 +41,8 @@ export default function ContactContent() {
 
     // 1. Try to log to Supabase (optional, fails gracefully)
     try {
-      const { error: dbError } = await supabase
-        .from("contact_inquiries" as any)
+      const { error: dbError } = await (supabase as any)
+        .from("contact_inquiries")
         .insert([
           {
             name: formData.name,
@@ -99,7 +99,7 @@ export default function ContactContent() {
           },
           body: JSON.stringify({
             service_id: emailJsServiceId,
-            template_id: customerTemplate,
+            template_id: emailJsCustomerTemplate,
             user_id: emailJsPublicKey,
             template_params: {
               name: formData.name,

@@ -56,7 +56,7 @@ const Header = () => {
           >
             <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary/50 group-hover:ring-primary transition-all duration-300">
               <img 
-                src={heliosLogo.src || heliosLogo} 
+                src={(heliosLogo as any).src || heliosLogo} 
                 alt="Helios Digital Technology" 
                 className="w-full h-full object-cover"
               />

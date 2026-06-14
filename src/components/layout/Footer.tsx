@@ -28,7 +28,7 @@ const Footer = () => {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
                 <img
-                  src={heliosLogo.src || heliosLogo}
+                  src={(heliosLogo as any).src || heliosLogo}
                   alt="Helios Digital Technology"
                   className="w-full h-full object-cover"
                 />

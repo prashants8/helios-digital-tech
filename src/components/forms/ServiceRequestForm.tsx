@@ -87,8 +87,8 @@ const ServiceRequestForm = ({ initialService = "" }: ServiceRequestFormProps) =>
     }
     // 1. Try to log to Supabase (optional, fails gracefully)
     try {
-      const { error: dbError } = await supabase
-        .from("service_requests" as any)
+      const { error: dbError } = await (supabase as any)
+        .from("service_requests")
         .insert([
           {
             name: formData.name,

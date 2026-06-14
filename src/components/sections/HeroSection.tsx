@@ -33,7 +33,7 @@ const HeroSection = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent blur-xl opacity-50 animate-pulse" />
               <div className="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-primary/30 shadow-glow">
                 <img 
-                  src={heliosLogo.src || heliosLogo} 
+                  src={(heliosLogo as any).src || heliosLogo} 
                   alt="Helios Digital Technology" 
                   className="w-full h-full object-cover"
                 />
