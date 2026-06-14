@@ -5,8 +5,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Award, Globe, Users, TrendingUp } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const About = () => {
+  useSEO({
+    title: "About Us - IT Consultants & Specialists",
+    description: "Learn about Helios Digital Technology's mission, values, leadership team, and our journey in empowering startups and enterprises with modern tech solutions.",
+    keywords: "about helios, prashant shukla, yogesh purohit, it consulting company, business technology agency",
+  });
+
   const milestones = [
     { year: "2018", event: "20+ Clients", description: "Reached our first major milestone" },
     { year: "2020", event: "Cloud Excellence", description: "Became certified partners with AWS, Azure" },

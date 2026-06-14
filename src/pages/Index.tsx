@@ -7,8 +7,15 @@ import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const Index = () => {
+  useSEO({
+    title: "Empowering Businesses with IT Solutions",
+    description: "Helios Digital Technology offers scalable, cost-effective IT solutions including consulting, development, cloud services, and business analytics.",
+    keywords: "it consulting, web development, cloud services, business analytics, software testing, helios digital",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />

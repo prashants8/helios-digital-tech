@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import ScrollToTop from "./components/layout/ScrollToTop";
+import FloatingCTA from "./components/ui/FloatingCTA";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <FloatingCTA />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />

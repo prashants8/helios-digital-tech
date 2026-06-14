@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Send, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ServiceRequestFormProps {
   initialService?: string;
@@ -82,47 +83,171 @@ const ServiceRequestForm = ({ initialService = "" }: ServiceRequestFormProps) =>
       });
       return;
     }
+    // 1. Try to log to Supabase (optional, fails gracefully)
+    try {
+      const { error: dbError } = await supabase
+        .from("service_requests" as any)
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            company: formData.company,
+            phone: formData.phone,
+            service: formData.service,
+            budget: formData.budget,
+            timeline: formData.timeline,
+            description: formData.description,
+          },
+        ]);
 
-    const subject = `Service Request: ${formData.service}`;
-    const body = [
-      "New service request from heliosdigitaltechnology.com",
-      "",
-      `Full Name: ${formData.name}`,
-      `Email Address: ${formData.email}`,
-      `Company Name: ${formData.company || "Not provided"}`,
-      `Phone Number: ${formData.phone || "Not provided"}`,
-      `Service Required: ${formData.service}`,
-      `Budget Range: ${formData.budget || "Not provided"}`,
-      `Project Timeline: ${formData.timeline || "Not provided"}`,
-      "",
-      "Project Description:",
-      formData.description,
-    ].join("\n");
+      if (dbError) {
+        console.warn("Supabase database insert warning:", dbError.message);
+      }
+    } catch (dbErr) {
+      console.warn("Could not save to Supabase database backup:", dbErr);
+    }
 
-    const mailtoLink = `mailto:${SERVICE_REQUEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const emailJsPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    const emailJsServiceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const emailJsAdminTemplate = import.meta.env.VITE_EMAILJS_ADMIN_TEMPLATE_ID;
+    const emailJsCustomerTemplate = import.meta.env.VITE_EMAILJS_CUSTOMER_TEMPLATE_ID;
 
-    window.location.href = mailtoLink;
+    const web3FormsAccessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: "Email draft prepared",
-      description: `Your email app should open a draft addressed to ${SERVICE_REQUEST_EMAIL}. Send that email to complete the request.`,
-    });
+    try {
+      if (emailJsPublicKey && emailJsServiceId && emailJsAdminTemplate && emailJsCustomerTemplate) {
+        // Send via EmailJS
+        const adminResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service_id: emailJsServiceId,
+            template_id: emailJsAdminTemplate,
+            user_id: emailJsPublicKey,
+            template_params: {
+              name: formData.name,
+              email: formData.email,
+              company: formData.company || "Not provided",
+              phone: formData.phone || "Not provided",
+              service: formData.service,
+              budget: formData.budget || "Not provided",
+              timeline: formData.timeline || "Not provided",
+              description: formData.description,
+            },
+          }),
+        });
 
-    setTimeout(() => {
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        phone: "",
-        service: initialService,
-        budget: "",
-        timeline: "",
-        description: "",
+        if (!adminResponse.ok) {
+          const errText = await adminResponse.text();
+          throw new Error(errText || "Failed to send email notification to admin.");
+        }
+
+        const customerResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service_id: emailJsServiceId,
+            template_id: emailJsCustomerTemplate,
+            user_id: emailJsPublicKey,
+            template_params: {
+              name: formData.name,
+              email: formData.email,
+              service: formData.service,
+            },
+          }),
+        });
+
+        if (!customerResponse.ok) {
+          console.warn("Autoresponder warning: Could not send automated confirmation to customer.");
+        }
+
+        setIsSubmitted(true);
+        toast({
+          title: "Service Request Submitted!",
+          description: "Thank you. Your request has been successfully submitted.",
+        });
+      } else if (web3FormsAccessKey) {
+        // Send via Web3Forms
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          body: JSON.stringify({
+            access_key: web3FormsAccessKey,
+            subject: `New Service Request from ${formData.name} - ${formData.service}`,
+            from_name: "Helios Digital Technology website",
+            name: formData.name,
+            email: formData.email,
+            company: formData.company || "Not provided",
+            phone: formData.phone || "Not provided",
+            service: formData.service,
+            budget: formData.budget || "Not provided",
+            timeline: formData.timeline || "Not provided",
+            description: formData.description,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to submit form using Web3Forms.");
+        }
+
+        setIsSubmitted(true);
+        toast({
+          title: "Service Request Submitted!",
+          description: "Thank you. Your request has been successfully submitted.",
+        });
+      } else {
+        // Fallback to mailto
+        const subject = encodeURIComponent(`Service Request: ${formData.service} from ${formData.name}`);
+        const body = encodeURIComponent(
+          `Name: ${formData.name}\n` +
+          `Email: ${formData.email}\n` +
+          `Company: ${formData.company || "Not provided"}\n` +
+          `Phone: ${formData.phone || "Not provided"}\n` +
+          `Service: ${formData.service}\n` +
+          `Budget: ${formData.budget || "Not provided"}\n` +
+          `Timeline: ${formData.timeline || "Not provided"}\n\n` +
+          `Description:\n${formData.description}`
+        );
+
+        window.location.href = `mailto:info@heliosdigitaltechnology.com?subject=${subject}&body=${body}`;
+
+        toast({
+          title: "Email Client Opened",
+          description: "Pre-filled your email application to send the request details directly.",
+        });
+      }
+
+      // Reset form on success
+      setTimeout(() => {
+        setFormData({
+          name: "",
+          email: "",
+          company: "",
+          phone: "",
+          service: initialService,
+          budget: "",
+          timeline: "",
+          description: "",
+        });
+        setIsSubmitted(false);
+      }, 5000);
+    } catch (error: any) {
+      console.error("Submission error:", error);
+      toast({
+        title: "Submission Failed",
+        description: error.message || "Something went wrong. Please try again or contact us directly.",
+        variant: "destructive",
       });
-      setIsSubmitted(false);
-    }, 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -131,7 +256,7 @@ const ServiceRequestForm = ({ initialService = "" }: ServiceRequestFormProps) =>
 
   if (isSubmitted) {
     return (
-      <Card className="p-12 text-center bg-card/50 backdrop-blur-sm border-primary/30">
+      <Card className="p-12 text-center bg-card/50 backdrop-blur-sm border-primary/30 animate-fade-in">
         <div className="flex justify-center mb-6">
           <div className="p-4 rounded-full bg-gradient-to-br from-primary to-accent">
             <CheckCircle className="w-12 h-12 text-primary-foreground" />
@@ -139,7 +264,7 @@ const ServiceRequestForm = ({ initialService = "" }: ServiceRequestFormProps) =>
         </div>
         <h3 className="text-2xl font-bold mb-3">Thank You!</h3>
         <p className="text-muted-foreground">
-          Your email draft is ready. Please send it from your email app so our team receives your request.
+          We have received your service request and our team will get back to you within 24 hours.
         </p>
       </Card>
     );

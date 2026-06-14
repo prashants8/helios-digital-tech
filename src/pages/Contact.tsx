@@ -8,8 +8,15 @@ import { Label } from "@/components/ui/label";
 import { Mail, MapPin, Clock, Send } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useSEO } from "@/hooks/useSEO";
 
 const Contact = () => {
+  useSEO({
+    title: "Contact Us - Support & Business Inquiries",
+    description: "Get in touch with Helios Digital Technology. Email us at info@heliosdigitaltechnology.com or send a message for 24/7 technical support and custom IT project inquiries.",
+    keywords: "contact helios, tech support email, business inquiry form, helios digital office",
+  });
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -38,15 +45,139 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    // 1. Try to log to Supabase (optional, fails gracefully)
+    try {
+      const { error: dbError } = await supabase
+        .from("contact_inquiries" as any)
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            subject: formData.subject,
+            message: formData.message,
+          },
+        ]);
+
+      if (dbError) {
+        console.warn("Supabase database insert warning:", dbError.message);
+      }
+    } catch (dbErr) {
+      console.warn("Could not save to Supabase database backup:", dbErr);
+    }
+
+    const emailJsPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    const emailJsServiceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const emailJsAdminTemplate = import.meta.env.VITE_EMAILJS_ADMIN_TEMPLATE_ID;
+    const emailJsCustomerTemplate = import.meta.env.VITE_EMAILJS_CUSTOMER_TEMPLATE_ID;
+
+    const web3FormsAccessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+
+    try {
+      if (emailJsPublicKey && emailJsServiceId && emailJsAdminTemplate && emailJsCustomerTemplate) {
+        // Send via EmailJS
+        const adminResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service_id: emailJsServiceId,
+            template_id: emailJsAdminTemplate,
+            user_id: emailJsPublicKey,
+            template_params: {
+              name: formData.name,
+              email: formData.email,
+              subject: formData.subject,
+              message: formData.message,
+            },
+          }),
+        });
+
+        if (!adminResponse.ok) {
+          const errText = await adminResponse.text();
+          throw new Error(errText || "Failed to send email notification to admin.");
+        }
+
+        const customerResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service_id: emailJsServiceId,
+            template_id: customerTemplate,
+            user_id: emailJsPublicKey,
+            template_params: {
+              name: formData.name,
+              email: formData.email,
+              subject: formData.subject,
+            },
+          }),
+        });
+
+        if (!customerResponse.ok) {
+          console.warn("Autoresponder warning: Could not send automated confirmation to customer.");
+        }
+
+        toast({
+          title: "Message Sent!",
+          description: "Thank you. We have received your inquiry and sent a confirmation email to you.",
+        });
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else if (web3FormsAccessKey) {
+        // Send via Web3Forms
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          body: JSON.stringify({
+            access_key: web3FormsAccessKey,
+            subject: `Contact Inquiry: ${formData.subject} from ${formData.name}`,
+            from_name: "Helios Digital Technology website",
+            name: formData.name,
+            email: formData.email,
+            subject_field: formData.subject,
+            message: formData.message,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to submit form using Web3Forms.");
+        }
+
+        toast({
+          title: "Message Sent!",
+          description: "Thank you. Your message has been sent successfully.",
+        });
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        // Fallback to mailto
+        const mailSubject = encodeURIComponent(`Contact Inquiry: ${formData.subject}`);
+        const mailBody = encodeURIComponent(
+          `Name: ${formData.name}\n` +
+          `Email: ${formData.email}\n\n` +
+          `Message:\n${formData.message}`
+        );
+
+        window.location.href = `mailto:info@heliosdigitaltechnology.com?subject=${mailSubject}&body=${mailBody}`;
+
+        toast({
+          title: "Email Client Opened",
+          description: "Pre-filled your email application to send the inquiry details directly.",
+        });
+      }
+    } catch (error: any) {
+      console.error("Submission error:", error);
       toast({
-        title: "Message Sent!",
-        description: "We'll get back to you within 24 hours.",
+        title: "Submission Failed",
+        description: error.message || "Something went wrong. Please try again or contact us directly.",
+        variant: "destructive",
       });
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    }, 2000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

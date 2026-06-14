@@ -5,8 +5,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Cloud, Shield, Database, Code, Stethoscope } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const Services = () => {
+  useSEO({
+    title: "Our IT Services & Development Solutions",
+    description: "Explore Helios Digital's IT services: Cloud deployment, cybersecurity audits, custom web/app development, data analytics, and healthcare GP recruitment placement.",
+    keywords: "it services, cloud deployment, devops, penetration testing, business intelligence, healthcare gp recruitment, web development",
+  });
+
   const categories = [
     {
       icon: Cloud,

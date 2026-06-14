@@ -4,8 +4,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { BarChart3, LineChart, PieChart, TrendingUp, Database, Lightbulb } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const BusinessIntelligence = () => {
+  useSEO({
+    title: "BI & Analytics Solutions - Power BI & Tableau",
+    description: "Transform raw data into actionable insights. Get professional Business Intelligence consulting: interactive dashboards, predictive analytics, custom reports, and database integration.",
+    keywords: "business intelligence, power bi developer, tableau dashboard, predictive analytics, data analysis services",
+  });
+
   const tools = [
     { name: "Power BI", expertise: "95%" },
     { name: "Tableau", expertise: "90%" },

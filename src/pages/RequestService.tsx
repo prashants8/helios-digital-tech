@@ -4,8 +4,14 @@ import ServiceRequestForm from "@/components/forms/ServiceRequestForm";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, Clock, Users, Shield } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { useSEO } from "@/hooks/useSEO";
 
 const RequestService = () => {
+  useSEO({
+    title: "Request a Service - Get a Custom IT Quote",
+    description: "Tell us about your project requirements and receive a custom IT proposal and budget estimate within 24 hours from Helios Digital Technology.",
+    keywords: "request service, it project proposal, hire web developers, cloud setup quote",
+  });
   const [searchParams] = useSearchParams();
   const selectedService = searchParams.get("service") ?? "";
   const process = [
