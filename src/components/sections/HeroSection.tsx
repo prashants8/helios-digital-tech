@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import heliosLogo from "@/assets/helios-logo.jpg";
 import HeroSphere from "@/components/sections/HeroSphere";
@@ -33,7 +33,7 @@ const HeroSection = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent blur-xl opacity-50 animate-pulse" />
               <div className="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-primary/30 shadow-glow">
                 <img 
-                  src={heliosLogo} 
+                  src={heliosLogo.src || heliosLogo} 
                   alt="Helios Digital Technology" 
                   className="w-full h-full object-cover"
                 />
@@ -72,7 +72,7 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in" style={{ animationDelay: "0.6s" }}>
-            <Link to="/request-service">
+            <Link href="/request-service">
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-glow hover:shadow-glow transition-all duration-300 group"
@@ -81,7 +81,7 @@ const HeroSection = () => {
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link to="/services">
+            <Link href="/services">
               <Button 
                 size="lg"
                 variant="outline" 

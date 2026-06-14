@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -107,12 +109,12 @@ const ServiceRequestForm = ({ initialService = "" }: ServiceRequestFormProps) =>
       console.warn("Could not save to Supabase database backup:", dbErr);
     }
 
-    const emailJsPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-    const emailJsServiceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const emailJsAdminTemplate = import.meta.env.VITE_EMAILJS_ADMIN_TEMPLATE_ID;
-    const emailJsCustomerTemplate = import.meta.env.VITE_EMAILJS_CUSTOMER_TEMPLATE_ID;
+    const emailJsPublicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+    const emailJsServiceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const emailJsAdminTemplate = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID;
+    const emailJsCustomerTemplate = process.env.NEXT_PUBLIC_EMAILJS_CUSTOMER_TEMPLATE_ID;
 
-    const web3FormsAccessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "85f08253-7e4e-485f-9122-93af19cbf6ee";
+    const web3FormsAccessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "85f08253-7e4e-485f-9122-93af19cbf6ee";
 
     try {
       if (emailJsPublicKey && emailJsServiceId && emailJsAdminTemplate && emailJsCustomerTemplate) {

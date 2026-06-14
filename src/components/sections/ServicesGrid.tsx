@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { 
   Monitor, 
@@ -160,7 +160,7 @@ const ServicesGrid = () => {
             return (
               <Link
                 key={service.id}
-                to={`/request-service?service=${encodeURIComponent(service.title)}`}
+                href={`/request-service?service=${encodeURIComponent(service.title)}`}
                 className="group"
               >
                 {cardContent}

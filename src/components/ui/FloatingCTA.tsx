@@ -1,12 +1,14 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { MessageCircle, FileText, ArrowUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const FloatingCTA = () => {
-  const location = useLocation();
+  const pathname = usePathname();
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "919999999999"; // Replace with real number or set in env
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919999999999";
   const whatsappMessage = encodeURIComponent(
     "Hi Helios Digital, I visited your website and would like to inquire about your IT & Business Intelligence services."
   );
@@ -25,7 +27,7 @@ const FloatingCTA = () => {
   };
 
   // Hide the floating CTA on the Request Service page itself to avoid redundancy
-  if (location.pathname === "/request-service") {
+  if (pathname === "/request-service") {
     return null;
   }
 
@@ -60,7 +62,7 @@ const FloatingCTA = () => {
 
       {/* Floating Request Service (Mobile Only) */}
       <Link
-        to="/request-service"
+        href="/request-service"
         className="pointer-events-auto md:hidden relative p-4 rounded-full bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-glow transition-all duration-300 hover:-translate-y-1 flex items-center justify-center group"
         aria-label="Request a service"
       >

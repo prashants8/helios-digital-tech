@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Mail, MapPin, Linkedin, Twitter, Facebook, Instagram } from "lucide-react";
 import heliosLogo from "@/assets/helios-logo.jpg";
 
@@ -28,7 +28,7 @@ const Footer = () => {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
                 <img
-                  src={heliosLogo}
+                  src={heliosLogo.src || heliosLogo}
                   alt="Helios Digital Technology"
                   className="w-full h-full object-cover"
                 />
@@ -63,7 +63,7 @@ const Footer = () => {
               {services.map((service) => (
                 <li key={service}>
                   <Link
-                    to="/services"
+                    href="/services"
                     className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
                   >
                     {service}
@@ -79,7 +79,7 @@ const Footer = () => {
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
                   >
                     {link.label}
@@ -115,10 +115,10 @@ const Footer = () => {
               Copyright 2024 Helios Digital Technology. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <Link to="/privacy" className="text-muted-foreground hover:text-primary text-sm transition-colors">
+              <Link href="/privacy" className="text-muted-foreground hover:text-primary text-sm transition-colors">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="text-muted-foreground hover:text-primary text-sm transition-colors">
+              <Link href="/terms" className="text-muted-foreground hover:text-primary text-sm transition-colors">
                 Terms of Service
               </Link>
             </div>

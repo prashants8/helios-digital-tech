@@ -1,4 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -6,7 +9,7 @@ import heliosLogo from "@/assets/helios-logo.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -16,15 +19,14 @@ const Header = () => {
     { href: "/contact", label: "Contact" },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
-  const homeNavigationState = { scrollToTop: "smooth" as const };
+  const isActive = (path: string) => pathname === path;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleHomeClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (location.pathname === "/") {
+    if (pathname === "/") {
       event.preventDefault();
       scrollToTop();
     }
@@ -36,7 +38,7 @@ const Header = () => {
   ) => {
     setIsMenuOpen(false);
 
-    if (href === "/" && location.pathname === "/") {
+    if (href === "/" && pathname === "/") {
       event.preventDefault();
       scrollToTop();
     }
@@ -48,14 +50,13 @@ const Header = () => {
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link
-            to="/"
-            state={homeNavigationState}
+            href="/"
             onClick={handleHomeClick}
             className="group flex min-w-0 items-center gap-3"
           >
             <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary/50 group-hover:ring-primary transition-all duration-300">
               <img 
-                src={heliosLogo} 
+                src={heliosLogo.src || heliosLogo} 
                 alt="Helios Digital Technology" 
                 className="w-full h-full object-cover"
               />
@@ -71,8 +72,7 @@ const Header = () => {
             {navLinks.map((link) => (
               <Link
                 key={link.href}
-                to={link.href}
-                state={link.href === "/" ? homeNavigationState : undefined}
+                href={link.href}
                 onClick={link.href === "/" ? handleHomeClick : undefined}
                 className={`relative py-2 text-sm font-medium transition-colors duration-200 hover:text-primary ${
                   isActive(link.href) ? "text-primary" : "text-foreground/80"
@@ -88,7 +88,7 @@ const Header = () => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Link to="/request-service">
+            <Link href="/request-service">
               <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold px-6 shadow-glow hover:shadow-glow transition-all duration-300">
                 Request Service
               </Button>
@@ -112,8 +112,7 @@ const Header = () => {
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
-                  to={link.href}
-                  state={link.href === "/" ? homeNavigationState : undefined}
+                  href={link.href}
                   onClick={(event) => handleMobileNavClick(event, link.href)}
                   className={`block py-3 px-4 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-muted hover:text-primary ${
                     isActive(link.href) ? "bg-muted text-primary" : "text-foreground/80"
@@ -123,7 +122,7 @@ const Header = () => {
                 </Link>
               ))}
               <Link
-                to="/request-service"
+                href="/request-service"
                 onClick={() => setIsMenuOpen(false)}
                 className="block mt-4"
               >
