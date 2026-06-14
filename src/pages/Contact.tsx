@@ -70,7 +70,7 @@ const Contact = () => {
     const emailJsAdminTemplate = import.meta.env.VITE_EMAILJS_ADMIN_TEMPLATE_ID;
     const emailJsCustomerTemplate = import.meta.env.VITE_EMAILJS_CUSTOMER_TEMPLATE_ID;
 
-    const web3FormsAccessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    const web3FormsAccessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "85f08253-7e4e-485f-9122-93af19cbf6ee";
 
     try {
       if (emailJsPublicKey && emailJsServiceId && emailJsAdminTemplate && emailJsCustomerTemplate) {
